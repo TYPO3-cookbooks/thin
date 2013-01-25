@@ -1,0 +1,44 @@
+#
+# Cookbook Name:: thin
+# Recipe:: default
+#
+# Copyright 2012, Steffen Gebert / TYPO3 Association
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+include_recipe "build-essential"
+
+gem_package "thin"
+
+template "/etc/init.d/thin" do
+  source "thin-init.d.erb"
+  mode 0755
+end
+
+service "thin" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
+
+[
+  "/etc/thin",
+  "/var/log/thin"
+].each do |dir|
+  directory dir
+end
+
+directory "/var/run/thin" do
+  mode 0777
+end
