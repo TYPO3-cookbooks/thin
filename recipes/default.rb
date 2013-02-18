@@ -22,16 +22,6 @@ include_recipe "build-essential"
 
 gem_package "thin"
 
-template "/etc/init.d/thin" do
-  source "thin-init.d.erb"
-  mode 0755
-end
-
-service "thin" do
-  supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
-end
-
 [
   "/etc/thin",
   "/var/log/thin"
